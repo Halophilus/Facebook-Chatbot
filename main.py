@@ -1,6 +1,6 @@
-print("Hello world")
+import random
 
-sample = open("data.txt", "r")
+sample = open("data.txt", "r", errors="ignore")
 data = sample.read()
 sample.close()
 
@@ -27,6 +27,31 @@ for i in wordsRange:
     else:
         frequencies[secondWord] = frequencies[secondWord] + 1
 
-print(wordCount)
+def chooseNext(wordCounts, word):
+    hat = []
+    if word in wordCounts:
+        guesses = wordCounts[word]
+        for key,value in guesses.items():
+            for _ in range(value):
+                hat.append(key)
+        return random.choice(hat)
+    else:
+        return None
+    wordCounts[word]
 
+def generateStatement(wordCount):
+    startingWord = random.choice(list(wordCount))
+    statement = startingWord
+    while True:
+        startingWord = chooseNext(wordCount, startingWord)
+        if startingWord is None:
+            break
+        statement = statement + " " + startingWord
+        if startingWord == ".":
+            break
+    return statement
 
+for _ in range(1):
+    print(generateStatement(wordCount))
+   
+   
