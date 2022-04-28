@@ -25,9 +25,8 @@ with open('posts/your_posts_1.json','r') as f:
 
 print(postString)
 
-sample = open("data.txt", "r", errors="ignore")
-data = sample.read()
-sample.close()
+with open("data.txt", "r", errors="ignore") as sample:
+    data = sample.read()
 
 data = (data
     .lower()
