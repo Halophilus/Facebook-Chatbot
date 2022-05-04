@@ -1,3 +1,4 @@
 data.txt
-messages/
-posts/
+messages/**
+posts/**
+comments/**
