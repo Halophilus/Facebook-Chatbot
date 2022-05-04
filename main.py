@@ -71,24 +71,36 @@ def parseStatuses(dir):
                         flat_list.append(i['post'])
     return flat_list
 
-if __name__ == '__main__':
+def phrasinator():
     megaList = []
     comments = parseComments('comments/comments.json')
+    comments.reverse()
     messages = removeAlert(pullMessages(discoverFiles('messages/inbox')))
+    messages.reverse()
     statuses = parseStatuses('posts/your_posts_1.json')
-    megaList.append(comments)
-    megaList.append(messages)
-    megaList.append(statuses)
-    print(megaList)
+    statuses.reverse()
+    for i in comments:
+        megaList.append(i)
+        megaList.append(" | ")
+    for i in messages:
+        megaList.append(i)
+        megaList.append(" | ")
+    for i in statuses:
+        megaList.append(i)
+        megaList.append(" | ")
+    megaPhrase = ""
+    for phrases in megaList:
+        megaPhrase+=phrases
+    return megaPhrase
 
-sample = open("data.txt", "r", errors="ignore")
-data = sample.read()
-sample.close()
+data = phrasinator()
 
 data = (data
     .lower()
     .replace(".", " .")
     .replace(",", " ,")
+    .replace("!"," !")
+    .replace("?"," ?")
     .replace("\n"," ")
 )
 words = data.split(" ")
@@ -128,7 +140,7 @@ def generateStatement(wordCount):
         if startingWord is None:
             break
         statement = statement + " " + startingWord
-        if startingWord == ".":
+        if startingWord == "|":
             break
     return statement
 
