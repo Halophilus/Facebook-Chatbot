@@ -103,6 +103,8 @@ data = (data
     .replace("?"," ?")
     .replace("\n"," ")
     .replace("_"," ")
+    .replace("/"," or ")
+    .replace('"',' ')
 )
 words = data.split(" ")
 
