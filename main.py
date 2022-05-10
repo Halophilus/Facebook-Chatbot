@@ -85,9 +85,9 @@ def phrasinator():
     for i in messages:
         megaList.append(i)
         megaList.append(" | ")
-    for i in statuses:
-        megaList.append(i)
-        megaList.append(" | ")
+    #for i in statuses:
+    #    megaList.append(i)
+    #    megaList.append(" | ")
     megaPhrase = ""
     for phrases in megaList:
         megaPhrase+=phrases
@@ -102,6 +102,7 @@ data = (data
     .replace("!"," !")
     .replace("?"," ?")
     .replace("\n"," ")
+    .replace("_"," ")
 )
 words = data.split(" ")
 
@@ -132,18 +133,22 @@ def chooseNext(wordCounts, word):
         return None
     wordCounts[word]
 
+
 def generateStatement(wordCount):
     startingWord = random.choice(list(wordCount))
     statement = startingWord
+    counter = 0
     while True:
         startingWord = chooseNext(wordCount, startingWord)
         if startingWord is None:
             break
         statement = statement + " " + startingWord
         if startingWord == "|":
+            counter+=1
+        if counter == 50:
             break
     return statement
 
-for _ in range(1):
-    print(generateStatement(wordCount))
+print(generateStatement(wordCount))
+        
    
