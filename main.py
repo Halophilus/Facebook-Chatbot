@@ -7,6 +7,10 @@ import sys
 name = input("Enter your name: ")
 
 def discoverFiles(dir):
+    # return [ os.path.join(root,name)
+    #          for root, dirs, files in os.walk(dir)
+    #          for name in files
+    #          if name.endswith('.json') ]
     r = []
     for root, dirs, files in os.walk(dir):
         for name in files:
@@ -30,11 +34,9 @@ def pullMessages(paths):
     return messageList
 
 def removeAlert(messy):
-    y = []
-    for content in messy:
-      if isBlacklisted(content):
-          y.append(content)
-    return y
+    return [ content 
+             for content in messy 
+             if isBlacklisted(content) ]
 
 def isBlacklisted(content):
     blacklist = ['You sent a','You voted for','You started a video','You set the ','You scored','You responded ','You named','You left ','You joined ','You invited ','You changed the','You called']
@@ -42,6 +44,10 @@ def isBlacklisted(content):
         if content.startswith(figs):
             return False
     return True
+
+class Comment:
+    def __init__(self, content):
+        self.content = content
 
 def parseComments(dir):
     with open(dir, 'r') as e:
@@ -76,6 +82,7 @@ def phrasinator():
     comments = parseComments('comments/comments.json')
     comments.reverse()
     messages = removeAlert(pullMessages(discoverFiles('messages/inbox')))
+
     messages.reverse()
     statuses = parseStatuses('posts/your_posts_1.json')
     statuses.reverse()
@@ -85,9 +92,9 @@ def phrasinator():
     for i in messages:
         megaList.append(i)
         megaList.append(" | ")
-    #for i in statuses:
-    #    megaList.append(i)
-    #    megaList.append(" | ")
+    for i in statuses:
+        megaList.append(i)
+        megaList.append(" | ")
     megaPhrase = ""
     for phrases in megaList:
         megaPhrase+=phrases
@@ -105,6 +112,7 @@ data = (data
     .replace("_"," ")
     .replace("/"," or ")
     .replace('"',' ')
+    .replace('-',' ')
 )
 words = data.split(" ")
 
@@ -151,6 +159,6 @@ def generateStatement(wordCount):
             break
     return statement
 
-print(generateStatement(wordCount))
+
         
    
