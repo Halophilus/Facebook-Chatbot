@@ -4,7 +4,24 @@ from tkinter import ttk, filedialog, IntVar, END
 from tkinter.scrolledtext import ScrolledText
 from main import *
 
+def naminator():
+    global name
+    name = nameBox.get(1.0, END).strip()
+    top.grab_release()
+    top.destroy()
+
 root = tkinter.Tk()
+top = tkinter.Toplevel(root)
+top.attributes('-topmost',1)
+top.grid()
+top.title("Enter your name")
+top.grab_set()
+nameBox = tkinter.Text(top, height = 1, width = 30)
+nameBox.grid(column = 0, row = 0)
+enter = ttk.Button(top, text = "Enter", command = naminator)
+enter.grid(column = 1, row = 0)
+
+
 root.title("Facebookinator")
 frame = ttk.Frame(root, padding = 10)
 frame.grid()
@@ -17,13 +34,8 @@ statuses = []
 messages = []
 name = ""
 
-top = ttk.TopLevel(root, padding = 10)
-top.grid()
-top.title("Enter your name")
-top.grab_set()
-nameBox = tkinter.Text(top, height = 1, width = 30)
-nameBox.grid(column = 0, row = 0)
-enter = ttk.Button(top,)
+
+
 
 
 checkVar = tkinter.IntVar()
@@ -215,4 +227,7 @@ text_area = tkinter.scrolledtext.ScrolledText(generator,
                                               15))
   
 text_area.grid(column = 0, pady = 10, padx = 10)
+
+
+
 root.mainloop()
