@@ -15,6 +15,18 @@ res = ""
 comments = []
 statuses = []
 messages = []
+name = ""
+
+top = ttk.TopLevel(root, padding = 10)
+top.grid()
+top.title("Enter your name")
+top.grab_set()
+nameBox = tkinter.Text(top, height = 1, width = 30)
+nameBox.grid(column = 0, row = 0)
+enter = ttk.Button(top,)
+
+
+checkVar = tkinter.IntVar()
 
 topRow = ttk.Frame(frame, padding=0)
 topRow.grid(column = 0, row = 0)
@@ -54,7 +66,7 @@ def messagesLabel():
     if dirBox.get(1.0, END) != '\n':
         directory = str.strip(dirBox.get(1.0, END)) + '/messages/inbox'
     try:
-        messages = removeAlert(pullMessages(discoverFiles(directory)))
+        messages = removeAlert(pullMessages(discoverFiles(directory), name))
     except FileNotFoundError:
         messages = []
     if tkinter.IntVar.get(checkVar2):
@@ -72,7 +84,7 @@ def randMessage():
     directory = 'messages/inbox'
     if dirBox.get(1.0, END) != '\n':
         directory = str.strip(dirBox.get(1.0, END)) + '/messages/inbox'
-    messages = removeAlert(pullMessages(discoverFiles(directory)))
+    messages = removeAlert(pullMessages(discoverFiles(directory), name))
     randomMessage = random.choice(messages) + " | "
     text_area.insert(END, randomMessage)
 
@@ -145,11 +157,10 @@ commentRandom.grid(column=2,row=2)
 messageRandom = ttk.Button(mainContent,text="Pull Random", state = "disable", command= randMessage)
 messageRandom.grid(column=2,row=3)
 
-ttk.Button(generator, text="GENERATE").grid(column = 0, row = 0, sticky = '')
-
 def generate():
     megaList = []
-    if checkVar1:
+    bigPhrase = ""
+    if checkVar1.get() == 1:
         directory = 'comments/comments.json'
         if dirBox.get(1.0, END) != '\n':
             directory = str.strip(dirBox.get(1.0, END)) + '/comments/comments.json'
@@ -159,7 +170,8 @@ def generate():
             comments = []
         for i in comments:
             megaList.append(i)
-    if checkVar:
+            megaList.append(" | ")
+    if checkVar.get() == 1:
         directory = 'posts/your_posts_1.json'
         if dirBox.get(1.0, END) != '\n':
             directory = str.strip(dirBox.get(1.0, END)) + '/posts/your_posts_1.json'
@@ -168,19 +180,30 @@ def generate():
         except FileNotFoundError:
             statuses = []
         for i in statuses:
-            megalist.append(i)
-    if checkVar2:
+            megaList.append(i)
+            megaList.append(" | ")
+    if checkVar2.get() == 1:
         directory = 'messages/inbox'
         if dirBox.get(1.0, END) != '\n':
             directory = str.strip(dirBox.get(1.0, END)) + '/messages/inbox'
         try:
-            messages = removeAlert(pullMessages(discoverFiles(directory)))
+            messages = removeAlert(pullMessages(discoverFiles(directory), name))
         except FileNotFoundError:
             messages = []
         for i in messages:
-            megalist.append(i)
-    
-    
+            megaList.append(i)
+            megaList.append(" | ")
+    if len(megaList) == 0:
+        text_area.insert(END, " No content for generation! |")
+    else:
+        for phrases in megaList:
+            bigPhrase+=phrases
+        rndStatement = generateStatement(megaPhrasinator(bigPhrase))
+        text_area.insert(END, rndStatement)
+
+
+
+ttk.Button(generator, text="GENERATE", command = generate).grid(column = 0, row = 0, sticky = '')
 
 
         

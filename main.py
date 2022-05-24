@@ -4,7 +4,7 @@ import flatdict
 import os
 import sys
 
-name = input("Enter your name: ")
+
 
 def discoverFiles(dir):
     # return [ os.path.join(root,name)
@@ -22,14 +22,14 @@ def discoverFiles(dir):
     return s
 
 
-def pullMessages(paths):
+def pullMessages(paths, nom):
     messageList = []
     for file in paths:
         with open(file, 'r') as f:
             messages = json.load(f)
             rawMessages = messages['messages']
             for i in rawMessages:
-                if i['sender_name'] == name and 'content' in i:
+                if i['sender_name'] == nom and 'content' in i:
                     messageList.append(i['content'])
     return messageList
 
@@ -77,59 +77,35 @@ def parseStatuses(dir):
                         flat_list.append(i['post'])
     return flat_list
 
-def phrasinator():
-    megaList = []
-    comments = parseComments('comments/comments.json')
-    comments.reverse()
-    messages = removeAlert(pullMessages(discoverFiles('messages/inbox')))
+def megaPhrasinator(megaPhrase):
+    megaPhrase = (megaPhrase
+            .lower()
+            .replace(".", " .")
+            .replace(",", " ,")
+            .replace("!"," !")
+            .replace("?"," ?")
+            .replace("\n"," ")
+            .replace("_"," ")
+            .replace("/"," or ")
+            .replace('"',' ')
+            .replace('-',' ')
+    )
+    words = megaPhrase.split(" ")
+    wordCount = {}
+    wordsLength = len(words)
+    wordsRange = range(wordsLength - 1)
+    for i in wordsRange:
+        firstWord = words[i]
+        secondWord = words[i+1]
+        if firstWord not in wordCount:
+            wordCount[firstWord] = {}
+        frequencies = wordCount[firstWord]
+        if secondWord not in frequencies:
+            frequencies[secondWord] = 1
+        else:
+            frequencies[secondWord] = frequencies[secondWord] + 1
+    return wordCount
 
-    messages.reverse()
-    statuses = parseStatuses('posts/your_posts_1.json')
-    statuses.reverse()
-    for i in comments:
-        megaList.append(i)
-        megaList.append(" | ")
-    for i in messages:
-        megaList.append(i)
-        megaList.append(" | ")
-    for i in statuses:
-        megaList.append(i)
-        megaList.append(" | ")
-    megaPhrase = ""
-    for phrases in megaList:
-        megaPhrase+=phrases
-    return megaPhrase
-
-data = phrasinator()
-
-data = (data
-    .lower()
-    .replace(".", " .")
-    .replace(",", " ,")
-    .replace("!"," !")
-    .replace("?"," ?")
-    .replace("\n"," ")
-    .replace("_"," ")
-    .replace("/"," or ")
-    .replace('"',' ')
-    .replace('-',' ')
-)
-words = data.split(" ")
-
-wordCount = {}
-wordsLength = len(words)
-wordsRange = range(wordsLength - 1)
-
-for i in wordsRange:
-    firstWord = words[i]
-    secondWord = words[i+1]
-    if firstWord not in wordCount:
-        wordCount[firstWord] = {}
-    frequencies = wordCount[firstWord]
-    if secondWord not in frequencies:
-        frequencies[secondWord] = 1
-    else:
-        frequencies[secondWord] = frequencies[secondWord] + 1
 
 def chooseNext(wordCounts, word):
     hat = []
@@ -141,7 +117,6 @@ def chooseNext(wordCounts, word):
         return random.choice(hat)
     else:
         return None
-    wordCounts[word]
 
 
 def generateStatement(wordCount):
