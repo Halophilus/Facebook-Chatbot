@@ -9,6 +9,8 @@ def naminator():
     name = nameBox.get(1.0, END).strip()
     top.grab_release()
     top.destroy()
+    root.lift()
+
 
 root = tkinter.Tk()
 top = tkinter.Toplevel(root)
@@ -49,6 +51,9 @@ mainContent.grid(column = 0, row = 1)
 generator = ttk.Frame(frame, padding=0)
 generator.grid(column = 0, row = 2)
 
+bottomRow = ttk.Frame(frame, padding = 0)
+bottomRow.grid(column = 0, row = 3)
+
 def setTextInput(text):
         tkinter.Text.insert(1.0, text)
 
@@ -57,9 +62,14 @@ dirBox.grid(column=1, row = 0)
 
 def getDir():
     res = filedialog.askdirectory(title="Select a root directory for downloaded Facebook data")
-    print(type(dirBox))
     dirBox.delete('1.0', END)
     dirBox.insert('1.0', res)
+    statusCheck.deselect()
+    statusesLabel()
+    commentCheck.deselect()
+    commentsLabel()
+    messageCheck.deselect()
+    messagesLabel()
 
 ttk.Button(topRow, text="Get Directory",command=getDir).grid(column=0,row=0)
 
@@ -84,10 +94,10 @@ def messagesLabel():
     if tkinter.IntVar.get(checkVar2):
         if messages:
             statement = str(len(messages)) + ' found!'
-            ttk.Label(mainContent, text = statement).grid(column = 1, row = 3)
+            ttk.Label(mainContent, text = statement, foreground = 'green').grid(column = 1, row = 3)
             messageRandom["state"] = "enable"
         else:
-            ttk.Label(mainContent, text = "None found!").grid(column = 1, row = 3)
+            ttk.Label(mainContent, text = "None found!", foreground = 'red').grid(column = 1, row = 3)
     else:
         ttk.Label(mainContent, text = "                              ").grid(column = 1, row = 3)
         messageRandom["state"] = "disable"
@@ -111,10 +121,10 @@ def commentsLabel():
     if tkinter.IntVar.get(checkVar1):
         if comments:
             statement = str(len(comments)) + ' found!'
-            ttk.Label(mainContent, text = statement).grid(column = 1, row = 2)
+            ttk.Label(mainContent, text = statement, foreground = 'green').grid(column = 1, row = 2)
             commentRandom['state'] = 'enable'
         else:
-            ttk.Label(mainContent, text = "None found!").grid(column = 1, row = 2)
+            ttk.Label(mainContent, text = "None found!", foreground = 'red').grid(column = 1, row = 2)
     else:
         ttk.Label(mainContent, text = "                              ").grid(column = 1, row = 2)
         commentRandom['state'] = 'disable'
@@ -138,10 +148,10 @@ def statusesLabel():
     if tkinter.IntVar.get(checkVar):
         if statuses:
             statement = str(len(statuses)) + ' found!'
-            ttk.Label(mainContent, text = statement).grid(column = 1, row = 1)
+            ttk.Label(mainContent, text = statement, foreground = 'green').grid(column = 1, row = 1)
             statusRandom['state'] = 'enable'
         else:
-            ttk.Label(mainContent, text = "None found!").grid(column = 1, row = 1)
+            ttk.Label(mainContent, text = "None found!", foreground = 'red').grid(column = 1, row = 1)
     else:
         ttk.Label(mainContent, text = "                              ").grid(column = 1, row = 1)
         statusRandom['state'] = 'disable'
@@ -155,9 +165,12 @@ def randStatus():
     text_area.insert(END, randomStatus)
 
 
-ttk.Checkbutton(mainContent, width = 15, variable = checkVar, text = 'Statuses:', command = statusesLabel).grid(column = 0, row = 1)
-ttk.Checkbutton(mainContent, width = 15, variable = checkVar1, text = 'Comments:', command = commentsLabel).grid(column = 0, row = 2)
-ttk.Checkbutton(mainContent, width = 15, variable = checkVar2, text = 'Messages:', command = messagesLabel).grid(column = 0, row = 3)
+statusCheck = tkinter.Checkbutton(mainContent, width = 15, variable = checkVar, text = 'Statuses:', command = statusesLabel, justify = 'left', anchor = "w")
+statusCheck.grid(sticky = "W", column = 0, row = 1)
+commentCheck = tkinter.Checkbutton(mainContent, width = 15, variable = checkVar1, text = 'Comments:', command = commentsLabel, justify = 'left', anchor = 'w')
+commentCheck.grid(sticky = "W", column = 0, row = 2)
+messageCheck = tkinter.Checkbutton(mainContent, width = 15, variable = checkVar2, text = 'Messages:', command = messagesLabel, justify = 'left', anchor = 'w')
+messageCheck.grid(sticky = "W", column = 0, row = 3)
 
 
 #ttk.Label(mainContent, text = contentScan).grid(column = 1, row = 1)
@@ -213,20 +226,20 @@ def generate():
         rndStatement = generateStatement(megaPhrasinator(bigPhrase))
         text_area.insert(END, rndStatement)
 
+def clear():
+    text_area.delete('1.0', END)
 
-
-ttk.Button(generator, text="GENERATE", command = generate).grid(column = 0, row = 0, sticky = '')
-
-
-        
+ttk.Button(generator, text="GENERATE", command = generate).grid(column = 0, row = 0)
+ttk.Button(bottomRow, text = "CLEAR", command= clear).grid(column = 0, row = 0)
+ttk.Button(bottomRow, text = "README").grid(column = 1, row = 0)
 
 text_area = tkinter.scrolledtext.ScrolledText(generator,  
                                       width = 40, 
                                       height = 10, 
-                                      font = ("Times New Roman",
+                                      font = ("Helvetica",
                                               15))
   
-text_area.grid(column = 0, pady = 10, padx = 10)
+text_area.grid(column = 0, row = 1, pady = 10, padx = 10)
 
 
 
