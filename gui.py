@@ -24,7 +24,7 @@ enter = ttk.Button(top, text = "Enter", command = naminator)
 enter.grid(column = 1, row = 0)
 
 
-root.title("Facebookinator")
+root.title("Facebook Chat Generator")
 frame = ttk.Frame(root, padding = 10)
 frame.grid()
 checkVar = tkinter.IntVar()
@@ -35,10 +35,6 @@ comments = []
 statuses = []
 messages = []
 name = ""
-
-
-
-
 
 checkVar = tkinter.IntVar()
 
@@ -172,8 +168,6 @@ commentCheck.grid(sticky = "W", column = 0, row = 2)
 messageCheck = tkinter.Checkbutton(mainContent, width = 15, variable = checkVar2, text = 'Messages:', command = messagesLabel, justify = 'left', anchor = 'w')
 messageCheck.grid(sticky = "W", column = 0, row = 3)
 
-
-#ttk.Label(mainContent, text = contentScan).grid(column = 1, row = 1)
 
 statusRandom = ttk.Button(mainContent,text="Pull Random", state= "disable", command = randStatus)
 statusRandom.grid(column=2,row=1)
