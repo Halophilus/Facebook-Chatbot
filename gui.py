@@ -1,5 +1,5 @@
 from tempfile import tempdir
-import tkinter
+import tkinter, subprocess
 from tkinter import ttk, filedialog, IntVar, END
 from tkinter.scrolledtext import ScrolledText
 from main import *
@@ -11,6 +11,12 @@ def naminator():
     top.destroy()
     root.lift()
 
+def openReadme():
+    filepath = 'README.md'  
+    if os.name == 'nt':  # for Windows
+        os.startfile(filepath)
+    elif os.name == 'posix':  # for etc.
+        subprocess.call(('xdg-open', filepath))
 
 root = tkinter.Tk()
 top = tkinter.Toplevel(root)
@@ -225,7 +231,7 @@ def clear():
 
 ttk.Button(generator, text="GENERATE", command = generate).grid(column = 0, row = 0)
 ttk.Button(bottomRow, text = "CLEAR", command= clear).grid(column = 0, row = 0)
-ttk.Button(bottomRow, text = "README").grid(column = 1, row = 0)
+ttk.Button(bottomRow, text = "README", command = openReadme).grid(column = 1, row = 0)
 
 text_area = tkinter.scrolledtext.ScrolledText(generator,  
                                       width = 40, 
